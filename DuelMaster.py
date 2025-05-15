@@ -89,14 +89,15 @@ class Goblin(Enemy):
 
 class Player(Character):
     def __init__(self):
+        self.wins = 0
+        alive = True
         health = varied_stat(110, 10)
         accuracy = varied_stat(55, 5)
         self.base_accuracy = accuracy
         self.base_health = health
-        super().__init__("Hero", "The brave warrior", health, accuracy)
         self.weapon = Weapon("Sword", 10, 50)
-        self.wins = 0
-        
+        super().__init__("Hero", "The brave warrior", health, accuracy)
+
     def update_stats(self):
         self.max_health = self.base_health + 2.5 * self.wins
         self.accuracy = min(100, self.base_accuracy + 1 * self.wins)  
@@ -194,13 +195,13 @@ class Game:
                     if enemy.alive:
                         result, msg = enemy.attack_player(self.player)
                         print(f"While fleeing... {msg}")
-                        if result:
-                            print(result)
-                            return  # Player is dead, stop
+                        print(result)
                 if self.player.alive:
                     self.player.health = self.player.max_health
                     print("✅ You fled successfully and fully healed!")
                     return  # Go back to enemy selection
+                print("You died while trying to flee !")
+                return # Player is dead, stop
 
             elif command == "quit":
                 self.running = False
